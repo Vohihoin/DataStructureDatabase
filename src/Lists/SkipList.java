@@ -1,27 +1,25 @@
 package Lists;
 
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
 /**
  * An ordered list of elements
  */
-public class SkipList<T extends Comparable<T>> implements List<T>{
+public class SkipList<T extends Comparable<T>> implements Collection<T>{
 
     /**
      * Skip list iterator that iterates over all the elements in the list in order
      */
     protected class SkipListIterator implements Iterator<T>{
 
-        SkipList<T> list;
         ListNode curr;
 
         /**
@@ -144,7 +142,6 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
     /**
      * This adds a new value to the skiplist. The skiplist is an ordered collection, so it places the value in order in the list
      */
-    @Override
     public boolean add(T newElement) throws NullPointerException{
 
         if (newElement == null){
@@ -298,7 +295,6 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
      * Returns the size of the skiplist
      * @return the size of the skiplist
      */
-    @Override
     public int size() {
         return size;
     }
@@ -307,7 +303,6 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
      * Returns true is the skip list is empty
      * @return true if the skip list is empty, false otherwise
      */
-    @Override
     public boolean isEmpty() {
         return (size == 0);
     }
@@ -316,16 +311,18 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
      * Checks if the skiplist contains a given item
      * @return true if the skiplist contains a given item, false otherwise
      */
-    @Override
     @SuppressWarnings("unchecked")
     public boolean contains(Object item) {
+
+        T toFind;
+
         try{
-            T toFind = (T)item;
+            toFind = (T)item;
         }catch(ClassCastException | NullPointerException e){
             return false;
         }
 
-        T toFind = (T)item;
+        toFind = (T)item;
 
         int currLevel = root.highestLevel();
         ListNode curr = root;
@@ -359,7 +356,6 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
      * Returns an iterator over the skiplists elements. This iterator goes over the skip lists elements in order
      * @return an iterator over the skiplists elements.
      */
-    @Override
     public Iterator<T> iterator() {
         return (new SkipListIterator(this));
     }
@@ -367,32 +363,58 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
     /**
      * Returns an array of the skip lists current elements
      */
-    @Override
     public Object[] toArray() {
         return getLaneData(0).toArray(); // our 0 lane contains all our datas
     }
 
-    @Override
-    public <T> T[] toArray(T[] a) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toArray'");
+
+
+    /**
+     * 
+     * @throws ClassCastException if there's a type mismatch between the array type given and our generic type i.e if the elements in our
+     * skiplist can't be casted into the given array type
+     */
+    @SuppressWarnings("unchecked")
+    public <P> P[] toArray(P[] a) throws ClassCastException{
+
+        try{
+
+            if (a.length < size){ // if our array can't fit all our elements, we make a new array with the given type and place our elements there
+                return (P[])Arrays.copyOf(toArray(), size, a.getClass());
+            }
+
+            System.arraycopy(toArray(), 0, a, 0, size);
+            if (a.length > size){
+                a[size] = null;
+            }
+            return a;
+
+        }catch(ClassCastException | ArrayStoreException e){
+            throw new ClassCastException("Type mismatch beteen our elements and the array type given, we can't cast our array to the given"+
+                                            " type.");
+        }
+
     }
 
 
 
     
-    @Override
+    /**
+     * Removes the first instance it finds of a given object from the skiplist if it exists. This first instance will
+     * typically be the least recently added instance of this object
+     * 
+     * @return true if the object exists and thus
+     */
     @SuppressWarnings("unchecked")
     public boolean remove(Object o) {
 
-        boolean removedAtLeastOne = false; // boolean indicator if we removed at least one value
-
+        T val;
         try{
-            T val = (T)o;
+            val = (T)o;
         }catch(ClassCastException | NullPointerException e){
             return false;
         }
-        T val = (T)o;
+        val = (T)o;
 
         int currLevel = root.highestLevel();
         ListNode curr = root;
@@ -413,8 +435,7 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
                 curr.addNextAt(currLevel, lookAhead.nextAt(currLevel)); // we bypass our looked ahead value, removing it
                 // but we may still have duplicates of our value at this level, so we stay here with the same level and curr node
                 // until we find a value greater than us
-                removedAtLeastOne = true;
-                continue;
+                return true;
             }
             
             // WHEN WE FIND A VALUE GREATER THAN US, WE CAN NOW GO DOWN A LEVEL
@@ -422,20 +443,55 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
 
         }
 
-        return removedAtLeastOne;
+        return false;
 
     }
 
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'containsAll'");
+    /**
+     * Checks if the list contains all of the elements in the given collection
+     * 
+     * Has O(klogn) complexity where n is the skip list size and k is the collection's size
+     * @param collection - the collection of items to look for in our skiplist
+     * @throws NullPointerException if the collection given is null
+     * @throws ClassCastException
+     * 
+     * @return true if the skiplist contains all the desired elements
+     */
+    @SuppressWarnings("unchecked")
+    public boolean containsAll(Collection<?> collection) {
+
+        if (collection == null){
+            throw new NullPointerException("Collection given can't be null!");
+        }
+
+        try{
+
+            Collection<T> toUse = (Collection<T>)(collection);
+
+            // This is just a quick check to improve efficiency. We know that we don't allow null elements
+            // so, if a collection contains null elements then we can't possibly contain every element in it
+            try{
+                if (collection.contains(null)){
+                    return false;
+                }
+            }catch(NullPointerException e){ // if we get a null pointer exception, this collection doesn't allow nulls, neither do we, so we're good with it
+            }
+            
+            boolean containsAll = true;
+            for (T element : toUse){
+                containsAll &= contains(element);
+            }
+            return containsAll;
+
+        }catch(ClassCastException e){
+            throw new ClassCastException("Can't work with elements not of our given generic type");
+        }
+
     }
 
     /**
      * Adds all the items in the collection. Only returns false if the collection contains a null item because we can't add null items
      */
-    @Override
     public boolean addAll(Collection<? extends T> collection) {
         for (T item : collection){
             if (!this.add(item)){
@@ -446,87 +502,49 @@ public class SkipList<T extends Comparable<T>> implements List<T>{
 
     }
 
+
     /**
-     * Adding at index isn't supported for skipList because it is an ordered list
+     * Removes every element from the list that is contained in that collection
      * 
-     * @throws UnsupportedOperationException because this operation isn't supported
-     * by skip lists
+     * @throws ClassCastException if the collection's type is not equals to our skip list's type
+     * @throws NullPointerException if the collection given is null
      */
-    @Override
-    public boolean addAll(int index, Collection<? extends T> c) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Adding at index isn't supported for skipList because it is an ordered list");
+    @SuppressWarnings("unchecked")
+    public boolean removeAll(Collection<?> collection) throws ClassCastException, NullPointerException{
+
+        if (collection == null){
+            throw new NullPointerException("Can't work with null collections");
+        }
+
+        try{
+
+            Collection<T> toUse = (Collection<T>)(collection);
+            boolean removedAtLeastOne = false;
+            for (T element : toUse){
+                removedAtLeastOne |= this.remove(element);
+            }
+            return removedAtLeastOne;
+
+        }catch(ClassCastException e){
+            throw new ClassCastException( "We don't allow collections that are not of the generic type of our skiplist");
+        }
+
     }
 
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeAll'");
-    }
-
-    @Override
+    /**
+     * Removes everything from the list that is not in the collection
+     */
     public boolean retainAll(Collection<?> c) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'retainAll'");
     }
 
-    @Override
+    /**
+     * Clears the entire skip list
+     */
     public void clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
-    }
-
-    @Override
-    public T get(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get'");
-    }
-
-    @Override
-    public T set(int index, T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set'");
-    }
-
-    @Override
-    public void add(int index, T element) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
-    }
-
-    @Override
-    public T remove(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remove'");
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'indexOf'");
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'lastIndexOf'");
-    }
-
-    @Override
-    public ListIterator<T> listIterator() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listIterator'");
-    }
-
-    @Override
-    public ListIterator<T> listIterator(int index) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listIterator'");
-    }
-
-    @Override
-    public List<T> subList(int fromIndex, int toIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'subList'");
+        root.nextsInLanes.clear();
+        size = 0;
     }
 
     public static void main(String[] args) {
