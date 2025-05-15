@@ -153,6 +153,15 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
         return nodeMapper.getSize();
     }
 
+    /**
+     * Inserts a new edge between the given nodes from pred to succ. If the nodes don't already exist in the graph,
+     * the are created
+     * 
+     * @param pred
+     * @param succ
+     * @param weight
+     * @return
+     */
     @Override
     public boolean insertEdge(NodeType pred, NodeType succ, EdgeType weight) {
         Node predNode;
@@ -199,24 +208,70 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
 
     }
 
+    /**
+     * Checks if the graph contains an edge between the two given nodes
+     */
     @Override
     public boolean containsEdge(NodeType pred, NodeType succ) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'containsEdge'");
+        try{
+            Node predNode = nodeMapper.get(pred);
+            Node succNode = nodeMapper.get(succ);
+
+            for (Node node : predNode.edgesOutgoing.getKeys()){
+                if (node.equals(succNode)){
+                    return true;
+                }
+            }
+
+            return false;
+
+        }catch(NoSuchElementException e){
+            return false;
+        }
+
     }
 
+
+    /**
+     * Gets an edge between the two nodes pred and succ if it exists
+     * If the nodes aren't in our graph or if an edge doesn't exist between them, a NoSuchElementException is thrown
+     * 
+     * @return the weight of the edge between the given nodes if it exists
+     * @throws NoSuchElementException if the nodes aren't in our graph or no edge exists between them
+     */
     @Override
-    public EdgeType getEdge(NodeType pred, NodeType succ) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEdge'");
+    public EdgeType getEdge(NodeType pred, NodeType succ) throws NoSuchElementException{
+
+        Node predNode = nodeMapper.get(pred); // if the nodes aren't in our graph, then this method naturally throws a NoSuchElementException
+        Node succNode = nodeMapper.get(succ);
+
+        for (Node node : predNode.edgesOutgoing.getKeys()){
+            if (node.equals(succNode)){
+                return predNode.edgesOutgoing.get(succNode).weight;
+            }
+        }
+
+        throw new NoSuchElementException("Edge between nodes doesn't exist in our graph");
     }
 
+    /**
+     * This gets the total number of edges in the graph
+     * Because of my implementation, this has complexity O(N), where N is the number of nodes
+     */
     @Override
     public int getEdgeCount() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEdgeCount'");
+        int count = 0;
+
+        for (NodeType nodeVal : nodeMapper.getKeys()){
+            Node node = nodeMapper.get(nodeVal);
+            count += node.edgesOutgoing.getSize();
+        }
+
+        return count;
     }
 
+
+    
     @Override
     public List<NodeType> shortestPathData(NodeType start, NodeType end) {
         // TODO Auto-generated method stub
