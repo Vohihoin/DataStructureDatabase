@@ -326,6 +326,22 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
     public static void main(String[] args) {
 
         Graph<String, Integer> graph = new Graph<>();
+        graph.insertEdge("Sussex", "Lannon", 89);
+        graph.insertEdge("Sussex", "Milwaukee", 80);
+        graph.insertEdge("Superior", "San Antonio", 5000);
+        graph.insertEdge("Sussex", "Germantown", 50);
+        graph.insertEdge("Sussex", "Appleton", 67);
+        graph.insertEdge("Milwaukee", "Chicago", 100);
+        graph.insertEdge("San Antonio", "Austin", 200);
+        graph.insertEdge("Dallas", "Austin", 90);
+        graph.insertEdge("Sussex", "Chicago", 120);
+        graph.insertEdge("Sussex", "Menomenee Falls", 90);
+        graph.insertEdge("Madison", "Neenah", 85);
+        graph.insertEdge("Milwaukee", "Madison", 100);
+        graph.insertEdge("Madison", "Superior", 200);
+        graph.insertEdge("Germantown", "Menomenee Falls", 90);
+
+
 
         try{
             graph.toDotFile("mygraph");

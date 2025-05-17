@@ -1,2 +1,22 @@
 digraph mygraph {
+   "Madison" -> "Superior" [length=200.000];
+   "Madison" -> "Neenah" [length=85.000];
+   "Germantown" -> "Menomenee Falls" [length=90.000];
+   "Menomenee Falls";
+   "Lannon";
+   "Dallas" -> "Austin" [length=90.000];
+   "San Antonio" -> "Austin" [length=200.000];
+   "Appleton";
+   "Neenah";
+   "Austin";
+   "Sussex" -> "Germantown" [length=50.000];
+   "Sussex" -> "Menomenee Falls" [length=90.000];
+   "Sussex" -> "Lannon" [length=89.000];
+   "Sussex" -> "Chicago" [length=120.000];
+   "Sussex" -> "Milwaukee" [length=80.000];
+   "Sussex" -> "Appleton" [length=67.000];
+   "Superior" -> "San Antonio" [length=5000.000];
+   "Milwaukee" -> "Madison" [length=100.000];
+   "Milwaukee" -> "Chicago" [length=100.000];
+   "Chicago";
 }
