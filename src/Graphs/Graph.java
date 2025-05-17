@@ -1,4 +1,8 @@
 package Graphs;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -271,7 +275,7 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
     }
 
 
-    
+
     @Override
     public List<NodeType> shortestPathData(NodeType start, NodeType end) {
         // TODO Auto-generated method stub
@@ -287,7 +291,48 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
     /**
      * Creates a dot file in the current working directory of the current state of the graph
      */
-    public void toDotFile(){
+    public void toDotFile(String filename) throws IOException{
+
+        String fileString = "digraph " + filename + " {\n";
+        for (NodeType nodeVal : nodeMapper.getKeys()){
+            
+            Node node = nodeMapper.get(nodeVal);
+            List<Node> edgeNodes = node.edgesOutgoing.getKeys();
+
+            if (edgeNodes.isEmpty()){
+                fileString += String.format("   \"%s\";\n", node.data);
+            }else{
+                for (Node edgeNode : edgeNodes){
+                    Edge edge = node.edgesOutgoing.get(edgeNode);
+                    fileString += String.format("   \"%s\" -> \"%s\" [length=%.3f];\n", node.data, edgeNode.data, edge.weight.doubleValue());
+                }
+            }
+
+        }
+
+        fileString += "}";
+
+
+        try{
+            PrintWriter pw = new PrintWriter(filename+".dot");
+            pw.println(fileString);
+            pw.close();
+        }catch(IOException e){
+            throw new IOException("File already exists");
+        }
+
+    }
+
+    public static void main(String[] args) {
+
+        Graph<String, Integer> graph = new Graph<>();
+
+        try{
+            graph.toDotFile("mygraph");
+        }catch(IOException e){
+            System.out.println("Couldn't make file");
+        }
+        
 
     }
 

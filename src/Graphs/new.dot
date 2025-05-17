@@ -1,0 +1,7 @@
+digraph vahe{
+
+    "Vahe" -> "Zibah" [length=6];
+    "Zibah" -> "Mon pere" [length=7];
+    "Ma Mere";
+
+}
