@@ -29,6 +29,11 @@ public class PriorityQueue<T extends Comparable<T>>{
         this.IS_MIN = IS_MIN;
     }
 
+    /**
+     * Creates a new queue with the given initial capacity
+     * @param capacity
+     * @param IS_MIN
+     */
     public PriorityQueue(int capacity, boolean IS_MIN){
         heapArray = new Object[capacity];
         this.IS_MIN = IS_MIN;
