@@ -300,7 +300,10 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
             List<Node> edgeNodes = node.edgesOutgoing.getKeys();
 
             if (edgeNodes.isEmpty()){
-                fileString += String.format("   \"%s\";\n", node.data);
+                if (node.edgesIncoming.getSize() == 0){ // so if the node has no outgoing or incoming edges, it has to just be stated
+                                                        // as an isolated node in the graph file
+                    fileString += String.format("   \"%s\";\n", node.data);
+                }
             }else{
                 for (Node edgeNode : edgeNodes){
                     Edge edge = node.edgesOutgoing.get(edgeNode);
@@ -325,26 +328,47 @@ public class Graph<NodeType, EdgeType extends Number> implements GraphADT<NodeTy
 
     public static void main(String[] args) {
 
-        Graph<String, Integer> graph = new Graph<>();
-        graph.insertEdge("Sussex", "Lannon", 89);
-        graph.insertEdge("Sussex", "Milwaukee", 80);
-        graph.insertEdge("Superior", "San Antonio", 5000);
-        graph.insertEdge("Sussex", "Germantown", 50);
-        graph.insertEdge("Sussex", "Appleton", 67);
-        graph.insertEdge("Milwaukee", "Chicago", 100);
-        graph.insertEdge("San Antonio", "Austin", 200);
-        graph.insertEdge("Dallas", "Austin", 90);
-        graph.insertEdge("Sussex", "Chicago", 120);
-        graph.insertEdge("Sussex", "Menomenee Falls", 90);
-        graph.insertEdge("Madison", "Neenah", 85);
-        graph.insertEdge("Milwaukee", "Madison", 100);
-        graph.insertEdge("Madison", "Superior", 200);
-        graph.insertEdge("Germantown", "Menomenee Falls", 90);
+        Graph<String, Integer> familyTree = new Graph<>();
+        familyTree.insertEdge("Aigbe Ohihoin", "Vahe Ohihoin", 32);
+        familyTree.insertEdge("Esther Ohihoin", "Vahe Ohihoin", 32);
+        familyTree.insertEdge("Roseline Aniemeke", "Esther Ohihoin", 16);
+        familyTree.insertEdge("Christian Aniemeke", "Esther Ohihoin", 23);
+        familyTree.insertEdge("Benjamin Ohihoin", "Aigbe Ohihoin", 23);
+        familyTree.insertEdge("Anna Ohihoin", "Aigbe Ohihoin", 23);
+        familyTree.insertEdge("Benjamin Ohihoin", "Ojeifo Ohihoin", 23);
+        familyTree.insertEdge("Anna Ohihoin", "Ojeifo Ohihoin", 23);    
+        familyTree.insertEdge("Ojeifo Ohihoin", "Benjamin O. Ohihoin", 23);
+        familyTree.insertEdge("Sarah Ohihoin", "Benjamin O. Ohihoin", 23);  
+        familyTree.insertEdge("Ojeifo Ohihoin", "Victor Ohihoin", 23);
+        familyTree.insertEdge("Sarah Ohihoin", "Victor Ohihoin", 23);  
+        familyTree.insertNode("Zibah Ohihoin");
+        familyTree.insertEdge("Aigbe Ohihoin", "Zibah Ohihoin", 32);
+        familyTree.insertEdge("Esther Ohihoin", "Zibah Ohihoin", 32);
+        familyTree.insertEdge("Roseline Aniemeke", "Deborah Oni", 16);
+        familyTree.insertEdge("Christian Aniemeke", "Deborah Oni", 23);
+        familyTree.insertEdge("Deborah Oni", "Seun Oni", 32);
+        familyTree.insertEdge("Shola Oni", "Seun Oni", 32);
+        familyTree.insertEdge("Deborah Oni", "Marvelous Oni", 32);
+        familyTree.insertEdge("Shola Oni", "Marvelous Oni", 32);
+        familyTree.insertEdge("Deborah Oni", "Emmanuel Oni", 32);
+        familyTree.insertEdge("Shola Oni", "Emmanuel Oni", 32);
+        familyTree.insertEdge("Roseline Aniemeke", "Emmanuel Aniemeke", 16);
+        familyTree.insertEdge("Christian Aniemeke", "Emmanuel Aniemeke", 23);
+        familyTree.insertEdge("Emmanuel Aniemeke", "Christian E. Aniemeke", 38);
+        familyTree.insertEdge("Esther Aniemeke", "Christian E. Aniemeke", 31);
+        familyTree.insertEdge("Emmanuel Aniemeke", "David E. Aniemeke", 38);
+        familyTree.insertEdge("Esther Aniemeke", "David E. Aniemeke", 31);
+        familyTree.insertEdge("Christian Aniemeke", "John Aniemeke", 35);
+        familyTree.insertEdge("Roseline Aniemeke", "John Aniemeke", 28);
+        familyTree.insertEdge("Chidinma Aniemeke", "Miriam Aniemeke", 30);
+        familyTree.insertEdge("John Aniemeke", "Miriam Aniemeke", 31);
+        familyTree.insertEdge("Chidinma Aniemeke", "Timothy Aniemeke", 30);
+        familyTree.insertEdge("John Aniemeke", "Timothy Aniemeke", 31);
 
 
 
         try{
-            graph.toDotFile("mygraph");
+            familyTree.toDotFile("familyTree");
         }catch(IOException e){
             System.out.println("Couldn't make file");
         }

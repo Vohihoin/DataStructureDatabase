@@ -1,0 +1,36 @@
+digraph familyTree {
+   "Aigbe Ohihoin" -> "Vahe Ohihoin" [length=32.000];
+   "Aigbe Ohihoin" -> "Zibah Ohihoin" [length=32.000];
+   "Chidinma Aniemeke" -> "Miriam Aniemeke" [length=30.000];
+   "Chidinma Aniemeke" -> "Timothy Aniemeke" [length=30.000];
+   "Ojeifo Ohihoin" -> "Victor Ohihoin" [length=23.000];
+   "Ojeifo Ohihoin" -> "Benjamin O. Ohihoin" [length=23.000];
+   "Sarah Ohihoin" -> "Victor Ohihoin" [length=23.000];
+   "Sarah Ohihoin" -> "Benjamin O. Ohihoin" [length=23.000];
+   "Shola Oni" -> "Marvelous Oni" [length=32.000];
+   "Shola Oni" -> "Emmanuel Oni" [length=32.000];
+   "Shola Oni" -> "Seun Oni" [length=32.000];
+   "Roseline Aniemeke" -> "Deborah Oni" [length=16.000];
+   "Roseline Aniemeke" -> "Emmanuel Aniemeke" [length=16.000];
+   "Roseline Aniemeke" -> "Esther Ohihoin" [length=16.000];
+   "Roseline Aniemeke" -> "John Aniemeke" [length=28.000];
+   "Esther Ohihoin" -> "Vahe Ohihoin" [length=32.000];
+   "Esther Ohihoin" -> "Zibah Ohihoin" [length=32.000];
+   "Emmanuel Aniemeke" -> "Christian E. Aniemeke" [length=38.000];
+   "Emmanuel Aniemeke" -> "David E. Aniemeke" [length=38.000];
+   "Esther Aniemeke" -> "Christian E. Aniemeke" [length=31.000];
+   "Esther Aniemeke" -> "David E. Aniemeke" [length=31.000];
+   "Anna Ohihoin" -> "Aigbe Ohihoin" [length=23.000];
+   "Anna Ohihoin" -> "Ojeifo Ohihoin" [length=23.000];
+   "Deborah Oni" -> "Marvelous Oni" [length=32.000];
+   "Deborah Oni" -> "Emmanuel Oni" [length=32.000];
+   "Deborah Oni" -> "Seun Oni" [length=32.000];
+   "John Aniemeke" -> "Miriam Aniemeke" [length=31.000];
+   "John Aniemeke" -> "Timothy Aniemeke" [length=31.000];
+   "Benjamin Ohihoin" -> "Aigbe Ohihoin" [length=23.000];
+   "Benjamin Ohihoin" -> "Ojeifo Ohihoin" [length=23.000];
+   "Christian Aniemeke" -> "Deborah Oni" [length=23.000];
+   "Christian Aniemeke" -> "Emmanuel Aniemeke" [length=23.000];
+   "Christian Aniemeke" -> "Esther Ohihoin" [length=23.000];
+   "Christian Aniemeke" -> "John Aniemeke" [length=35.000];
+}
